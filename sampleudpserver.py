@@ -14,7 +14,7 @@ class EchoHandler(UDPServerHandler):
         self.log_info("Recv ", addr, dgram)
         resp = [x for x in dgram]
         resp.reverse()
-        self.send_buf.append({'addr': addr, 'dgram': bytearray(resp)})
+        self.sendto(addr, bytearray(resp))
 
     # Intercept just for demo logging; use default impl
     def send_callback(self):
