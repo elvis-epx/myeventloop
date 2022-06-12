@@ -22,9 +22,11 @@ class EchoHandler(TCPServerHandler):
             return
 
         i = self.recv_buf.index(ord('\n'))
-        self.send_buf += "Echoing: ".encode()
-        self.send_buf += self.recv_buf[0:i+1]
-        self.recv_buf = self.recv_buf[i+1:]
+        to_send, self.recv_buf = self.recv_buf[0:i+1], self.recv_buf[i+1:]
+
+        self.send("Echoing: ".encode())
+        self.send(to_send)
+
         self.log_info("Echoing")
 
     # Intercept just for demo logging; use default impl
