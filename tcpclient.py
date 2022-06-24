@@ -6,8 +6,8 @@ from myeventloop import Timeout, Handler, EventLoop, Log, LOG_INFO, LOG_DEBUG
 
 class TCPClientHandler(Handler):
     def __init__(self, addr):
-        fd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        super().__init__("client %s:%d" % addr, fd, socket.error)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        super().__init__("client %s:%d" % addr, sock, socket.error)
 
         self.recv_buf = []
         self.send_buf = []
@@ -18,7 +18,7 @@ class TCPClientHandler(Handler):
             self.fd.connect(addr)
         except BlockingIOError as e:
             pass
-        # will select() for write when connection is up
+        # will select() for write when connection is up (or failed)
 
     def read_callback(self):
         try:
