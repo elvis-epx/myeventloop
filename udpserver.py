@@ -42,6 +42,10 @@ class UDPServerHandler(Handler):
             self.log_debug("exception writing sk", err)
         self.send_buf = self.send_buf[1:]
 
+    # Use this method to add datagrams to send queue
+    def sendto(self, addr, dgram):
+        self.send_buf.append({'addr': addr, 'dgram': dgram})
+
 
 class UDPServerEventLoop(EventLoop):
     def __init__(self):
