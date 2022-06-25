@@ -37,6 +37,9 @@ class EchoHandler(TCPClientHandler):
     def recv_callback(self, latest):
         self.log_info("Recv ", latest)
 
+    def destroyed_callback(self):
+        self.log_info("Bye")
+
 loop = EventLoop()
 client = EchoHandler(("127.0.0.1", 6666))
 loop.loop()
