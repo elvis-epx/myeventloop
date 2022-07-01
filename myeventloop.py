@@ -10,7 +10,7 @@ LOG_DEBUG = 3
 LOG_DEBUG2 = 4
 
 class Log:
-    log_level = LOG_DEBUG
+    log_level = LOG_DEBUG2
     logfile = "None"
     is_daemon = False
 

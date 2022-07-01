@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from myeventloop import Log, LOG_DEBUG
+from myeventloop import Log, LOG_DEBUG, LOG_DEBUG2
 from tcpserver import *
 
-Log.set_level(LOG_DEBUG)
+Log.set_level(LOG_DEBUG2)
 
 # Echoes data when a complete line terminated with \n is detected
 class EchoHandler(TCPServerHandler):
