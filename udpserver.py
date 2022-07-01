@@ -2,7 +2,7 @@
 
 import socket, time, datetime
 from abc import ABC, abstractmethod
-from myeventloop import Timeout, Handler, EventLoop, Log, LOG_INFO, LOG_DEBUG
+from myeventloop import Timeout, Handler, EventLoop
 
 class UDPServerHandler(Handler):
     def __init__(self, addr, label=None):
@@ -17,9 +17,9 @@ class UDPServerHandler(Handler):
     def read_callback(self):
         try:
             dgram, addr = self.fd.recvfrom(4096)
-            Log.debug("Received %s" % dgram)
+            self.log_debug2("Received %s" % dgram)
         except socket.error:
-            Log.error("Error recvfrom")
+            self.log_warn("Error recvfrom")
             return
         self.recv_callback(addr, dgram)
 
@@ -39,7 +39,7 @@ class UDPServerHandler(Handler):
         try:
             self.fd.sendto(self.send_buf[0]['dgram'], 0, self.send_buf[0]['addr'])
         except socket.error as err:
-            self.log_debug("exception writing sk", err)
+            self.log_warn("exception writing sk", err)
         self.send_buf = self.send_buf[1:]
 
     # Use this method to add datagrams to send queue
