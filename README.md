@@ -29,8 +29,8 @@ A Timeout may be owned by a Handler. This is handy when a connection closes
 and the respective Handler is destroyed: all pending timeouts belonging
 to the Handler are automatically cancelled.
 
-```Log``` is a utility class for logging. It can output messages to terminal,
-to file and send by e-mail.
+```Log``` is a utility static class for logging. It can output messages
+to terminal, to file and send by e-mail.
 
 Since the implementation of event-driven TCP and UDP servers are the most
 common use case, we provide extended classes for them:
