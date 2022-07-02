@@ -1,2 +1,1 @@
-- debug2 level for internal debugging (timeouts, etc.)
 - Make Handler.items, Timeout.items belong to event loop (maybe)

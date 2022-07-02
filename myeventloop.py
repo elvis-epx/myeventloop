@@ -3,18 +3,18 @@
 import time, select, datetime, os, signal
 from abc import ABC, abstractmethod
 
-LOG_ERROR = 0
-LOG_WARN = 1
-LOG_INFO = 2
-LOG_DEBUG = 3
-LOG_DEBUG2 = 4
-
 class Log:
-    log_level = LOG_DEBUG2
+    ERROR = 0
+    WARN = 1
+    INFO = 2
+    DEBUG = 3
+    DEBUG2 = 4
+
+    log_level = DEBUG2
     logfile = "None"
     is_daemon = False
 
-    mail_level = LOG_INFO
+    mail_level = INFO
     mail_from = "None"
     mail_to = "None"
 
@@ -68,23 +68,23 @@ class Log:
 
     @staticmethod
     def error(*msg):
-        Log.log(LOG_ERROR, *msg)
+        Log.log(Log.ERROR, *msg)
 
     @staticmethod
     def warn(*msg):
-        Log.log(LOG_WARN, *msg)
+        Log.log(Log.WARN, *msg)
 
     @staticmethod
     def info(*msg):
-        Log.log(LOG_INFO, *msg)
+        Log.log(Log.INFO, *msg)
 
     @staticmethod
     def debug(*msg):
-        Log.log(LOG_DEBUG, *msg)
+        Log.log(Log.DEBUG, *msg)
 
     @staticmethod
     def debug2(*msg):
-        Log.log(LOG_DEBUG2, *msg)
+        Log.log(Log.DEBUG2, *msg)
 
 
 # background() credits: http://www.noah.org/python/daemonize.py
