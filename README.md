@@ -1,4 +1,4 @@
-= My Event Loop
+# My Event Loop
 
 This is a very simple, explicit and unambitious framework
 for simple event-driven programs, e.g. TCP or UDP protocol
@@ -7,12 +7,12 @@ implementations.
 It is a slightly improved version of some code I have been using
 for many years to implement my own gimmicks. 
 
-== Components
+## Components
 
 There are a couple examples ```(sample*.py)``` that are the best way to
 know the framework and use as a starting point for your projects.
 
-=== myeventloop module
+### myeventloop module
 
 This module contains the base classes for all necessary components.
 
@@ -35,7 +35,7 @@ to terminal, to file and send by e-mail.
 Since the implementation of event-driven TCP and UDP servers are the most
 common use case, we provide extended classes for them:
 
-=== myeventloop/tcpserver submodule
+### myeventloop/tcpserver submodule
 
 ```TCPServerEventLoop``` is extended with the typical plumbing
 needed to set up a TCP server. You may still use the base class for
@@ -49,7 +49,7 @@ an incoming TCP network connection```. All non-blocking aspects of data
 send/receive are implemented. You must extend this class and fill in 
 your application protocol.
 
-=== myeventloop/tcpclient submodule
+### myeventloop/tcpclient submodule
 
 ```TCPClientHandler``` is an abstract extension of Handler that encapsulates
 an outgoing TCP network connection. All non-blocking aspects of data
@@ -59,7 +59,7 @@ You must extend this class and fill in your application protocol.
 For TCP clients, there is no pre-baked event loop; just use the plain
 ```MyEventLoop``` class.
 
-=== myeventloop/udpserver submodule
+### myeventloop/udpserver submodule
 
 ```UDPServerHandler``` is an abstract extension of Handler that encapsulates
 a UDP network server.
