@@ -2,7 +2,7 @@
 
 import socket, time, datetime
 from abc import ABC, abstractmethod
-from .myeventloop import Timeout, Handler, EventLoop
+from . import Timeout, Handler, EventLoop
 
 class TCPServerHandler(Handler):
     """

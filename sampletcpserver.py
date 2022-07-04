@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from myeventloop.myeventloop import Log
+from myeventloop import Log
 from myeventloop.tcpserver import *
 
 Log.set_level(Log.DEBUG2)
