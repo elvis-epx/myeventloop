@@ -5,6 +5,11 @@ from abc import ABC, abstractmethod
 from myeventloop import Timeout, Handler, EventLoop
 
 class UDPServerHandler(Handler):
+    """
+    Handler specialization to encapsulate and handle UDP packets.
+    This is an abstract class, and there are methods you are required
+    to override to complete the implementation.
+    """
     def __init__(self, addr, label=None):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -23,10 +28,16 @@ class UDPServerHandler(Handler):
             return
         self.recv_callback(addr, dgram)
 
-    # Called when connection receives new data
-    # You must override this
     @abstractmethod
     def recv_callback(self, addr, dgram):
+        """
+        Override this abstract method to receive packets from UDP peers.
+        This class does not buffer incoming data.
+
+        Arguments:
+            addr: tuple with address and port of the peer
+            dgram: packet data
+        """
         pass
 
     def is_writable(self):
@@ -42,8 +53,15 @@ class UDPServerHandler(Handler):
             self.log_warn("exception writing sk", err)
         self.send_buf = self.send_buf[1:]
 
-    # Use this method to add datagrams to send queue
     def sendto(self, addr, dgram):
+        """
+        Method to append packets to the output buffer, making the
+        socket selectable for writing.
+
+        Arguments:
+            addr: tuple with address and port of the peer
+            dgram: packet data
+        """
         self.send_buf.append({'addr': addr, 'dgram': dgram})
 
 

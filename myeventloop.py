@@ -229,7 +229,7 @@ class Timeout:
     @staticmethod
     def new(label, relative_to, callback):
         """
-        Instantiates a new global Timeout, without an owner
+        Instantiates a new global Timeout, without an owner.
         Arguments:
             label: human-readable name of the timeout
             relative_to: relative timeout, in seconds from now
@@ -344,6 +344,8 @@ class Handler(ABC):
         The base implementation always returns True.
 
         Override it if you need to return False in any situation.
+        Do not override if you use one of the ready-made handlers for
+        TCP and UDP supplied by this framework.
         """
         return True
 
@@ -352,6 +354,10 @@ class Handler(ABC):
         """
         Called back by event loop when the file descriptor is ready for reading.
         You must override this method and receive the data.
+
+        If you inherit your handler from TCPServerHandler, TCPClientHandler or
+        UDPServerHandler, you should override recv_callback() instead. See the
+        documentation of these classes.
         """
         pass
 
@@ -370,6 +376,8 @@ class Handler(ABC):
 
         Override it if you want to use non-blocking writes, meaning you need
         to return True when apropriate.
+        Do not override if you use one of the ready-made handlers for
+        TCP and UDP supplied by this framework.
         """
         return False
 
@@ -377,6 +385,10 @@ class Handler(ABC):
         """
         Called back by event loop when the file descriptor is ready for writing.
         Override this if you want to do non-blocking writes.
+
+        If you inherit your handler from TCPServerHandler, TCPClientHandler or
+        UDPServerHandler, you should override send_callback() instead. See the
+        documentation of these classes.
         """
         pass
 
