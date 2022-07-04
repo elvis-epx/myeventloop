@@ -45,7 +45,7 @@ a TCP server if you prefer.
 TCP listening socket.
 
 ```TCPServerHandler``` is an abstract extension of Handler that encapsulates
-an incoming TCP network connection```. All non-blocking aspects of data
+an incoming TCP network connection. All non-blocking aspects of data
 send/receive are implemented. You must extend this class and fill in 
 your application protocol.
 
@@ -56,17 +56,16 @@ an outgoing TCP network connection. All non-blocking aspects of data
 send/receive are implemented, including non-blocking connection phase.
 You must extend this class and fill in your application protocol.
 
-For TCP clients, there is no pre-baked event loop; just use the plain
-```MyEventLoop``` class.
-
 ### myeventloop/udpserver submodule
 
 ```UDPServerHandler``` is an abstract extension of Handler that encapsulates
 a UDP network server.
 
-In this implementation, UDP is treated as connectionless, and a single handler
-exchanges packets with all remote peers (i.e. it does not implement the abstraction
-of an application-level connection).
+Since UDP is connectionless, UDP servers and clients are very similar,
+and a UDP protocol client handler may use this class as well. (The provided
+UDP client example does exactly this.)
 
-There is no UDP client sample in the code, but you can use the ```nc``` utility
-to test communication with the sample UDP server.
+In this implementation, UDP is treated as connectionless. A single handler
+exchanges packets from all remote peers, and no abstraction of a virtual
+connection is implemented (nothing prevents implementing that on top of
+it, though).

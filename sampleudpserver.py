@@ -25,4 +25,4 @@ class EchoHandler(UDPServerHandler):
 EchoHandler(("0.0.0.0", 6666))
 UDPServerEventLoop().loop()
 
-# Test with e.g. nc -u 127.0.0.1 6666
+# Test with sampleudpclient or `nc -u 127.0.0.1 6666`
