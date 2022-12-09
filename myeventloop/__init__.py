@@ -76,8 +76,7 @@ class Log:
 
             if Log.logfile != "None":
                 f = open(Log.logfile, "a")
-                f.write(msgw)
-                f.write("\r\n")
+                f.write("%s\r\n" % msgw)
                 f.close()
 
         if level <= Log.mail_level and Log.mail_from != 'None' and Log.mail_to != 'None':
