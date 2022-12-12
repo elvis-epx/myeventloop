@@ -64,7 +64,13 @@ class StateMachine:
 
     def observe(self, name, state, cb):
         self.observers[name] = (state, cb)
-        self.run_observers()
+        def run_observers(_):
+            self.run_observers()
+        Timeout(self, "new_observe", 0, run_observers)
+
+    def unobserve(self, name):
+        if name in self.observers:
+            del self.observers[name]
 
     def _trans(self, to_state):
         if to_state not in self.transitions[self.state]: # pragma: no cover
@@ -74,4 +80,6 @@ class StateMachine:
         Log.debug2("%s: %s -> %s" % (self.name, self.state, to_state))
         self.state = to_state
         self.states[self.state]()
-        self.run_observers()
+        def run_observers(_):
+            self.run_observers()
+        Timeout(self, "trans_observe", 0, run_observers)
