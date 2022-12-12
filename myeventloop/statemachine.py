@@ -49,11 +49,16 @@ class StateMachine:
         self.cancel_state_tasks()
         self.schedule_trans(new_state, 0)
 
+    def state_match(self, state):
+        return state == self.state or \
+                state == "*" or \
+                (state[0] == "!" and state[1:] != self.state)
+
     def run_observers(self):
         for name in list(self.observers.keys()):
             if name in self.observers:
                 state, cb = self.observers[name]
-                if state == self.state:
+                if self.state_match(state):
                     del self.observers[name]
                     cb()
 
