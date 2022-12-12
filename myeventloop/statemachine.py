@@ -74,10 +74,10 @@ class StateMachine:
 
     def _trans(self, to_state):
         if to_state not in self.transitions[self.state]: # pragma: no cover
-            Log.debug2("*** Invalid trans %s %s %s" % (self.name, self.state, to_state))
+            Log.warn("*** Invalid trans %s %s %s" % (self.name, self.state, to_state))
             return False
         self.cancel_state_tasks()
-        Log.debug2("%s: %s -> %s" % (self.name, self.state, to_state))
+        Log.debug("%s: %s -> %s" % (self.name, self.state, to_state))
         self.state = to_state
         self.states[self.state]()
         def run_observers(_):
