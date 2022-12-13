@@ -75,8 +75,9 @@ class Queue(Handler):
     """
     Removes all message handlers of a given owner.
     """
-    def reset(self, owner):
-        self.handlers[id(owner)] = {}
+    def unobserve(self, owner):
+        if id(owner) in self.handlers:
+            del self.handlers[id(owner)]
 
     """
     Adds a message to the queue. May be called by any thread context.

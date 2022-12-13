@@ -7,6 +7,8 @@ class StateMachine:
         self.transitions = {}
         self.state = "initial"
         self.observers = {}
+        self.observed_queues = []
+        self.observed_sms = []
         self.destroyed = False
 
     def destroy(self):
@@ -17,6 +19,22 @@ class StateMachine:
 
     def cancel_state_tasks(self):
         Timeout.cancel_and_inval_by_owner(self)
+
+    # Add other state machine observed by this one
+    def add_sm(self, sm):
+        self.observed_sms.append(sm)
+
+    def cancel_sm_observers(self):
+        for sm in self.observed_sms:
+            sm.unobserve(self)
+
+    # Add queue observed by this state machine
+    def add_queue(self, queue):
+        self.observed_queues.append(queue)
+
+    def cancel_queue_observers(self):
+        for queue in self.observed_queues:
+            queue.unobserve(self)
 
     def add_state(self, name, callback):
         self.states[name] = callback
@@ -54,32 +72,46 @@ class StateMachine:
                 state == "*" or \
                 (state[0] == "!" and state[1:] != self.state)
 
-    def run_observers(self):
-        for name in list(self.observers.keys()):
-            if name in self.observers:
-                state, cb = self.observers[name]
+    def run_observers(self, tgtowner=None):
+        for ownerid in list(self.observers.keys()):
+            if tgtowner is not None and id(tgtowner) != ownerid:
+                continue
+            if ownerid not in self.observers:
+                continue
+            observers = self.observers[ownerid]
+            if not observers:
+                del self.observers[ownerid]
+                continue
+            for name in list(observers.keys()):
+                if name not in observers:
+                    continue
+                state, cb = observers[name]
                 if self.state_match(state):
-                    del self.observers[name]
+                    del observers[name]
                     cb()
 
-    def observe(self, name, state, cb):
-        self.observers[name] = (state, cb)
+    def observe(self, owner, name, state, cb):
+        if id(owner) not in self.observers:
+            self.observers[id(owner)] = {}
+        self.observers[id(owner)][name] = (state, cb)
         def run_observers(_):
-            self.run_observers()
+            self.run_observers(owner)
         Timeout(self, "new_observe", 0, run_observers)
 
-    def unobserve(self, name):
-        if name in self.observers:
-            del self.observers[name]
+    def unobserve(self, owner):
+        if id(owner) in self.observers:
+            del self.observers[id(owner)]
 
     def _trans(self, to_state):
         if to_state not in self.transitions[self.state]: # pragma: no cover
             Log.warn("*** Invalid trans %s %s %s" % (self.name, self.state, to_state))
             return False
         self.cancel_state_tasks()
+        self.cancel_queue_observers()
+        self.cancel_sm_observers()
         Log.debug("%s: %s -> %s" % (self.name, self.state, to_state))
         self.state = to_state
         self.states[self.state]()
         def run_observers(_):
-            self.run_observers()
+            self.run_observers(None)
         Timeout(self, "trans_observe", 0, run_observers)
