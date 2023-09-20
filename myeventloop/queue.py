@@ -16,12 +16,14 @@ class Queue(Handler):
         self.r, self.w = socket.socketpair()
         super().__init__(name, self.r, socket.error)
         self.handlers = {}
+        self.handlers_all = {}
         self.q = []
         self.qlock = Lock()
 
     def destroy(self):
         self.w.close()
         self.handlers = {}
+        self.handlers_all = {}
         self.qlock.acquire()
         self.q = []
         self.qlock.release()
@@ -45,6 +47,9 @@ class Queue(Handler):
         if id(owner) not in self.handlers:
             self.handlers[id(owner)] = {}
         self.handlers[id(owner)][name] = (cb, recurrent)
+
+    def on_all_msg(self, owner, cb, recurrent=False):
+        self.handlers_all[id(owner)] = (cb, recurrent)
 
     """
     Adds a message handler with parsing/type conversion of contents
@@ -79,6 +84,10 @@ class Queue(Handler):
         if id(owner) in self.handlers:
             del self.handlers[id(owner)]
 
+    def unobserve_all(self, owner):
+        if id(owner) in self.handlers_all:
+            del self.handlers_all[id(owner)]
+
     """
     Adds a message to the queue. May be called by any thread context.
     """
@@ -107,3 +116,9 @@ class Queue(Handler):
                 if not recurrent:
                     del handlers[name]
                 cb(contents)
+
+            for owner, h in self.handlers_all.items():
+                cb, recurrent = h
+                if not recurrent:
+                    del self.handlers_all[owner]
+                cb(name, contents)
