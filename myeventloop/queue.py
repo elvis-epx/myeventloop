@@ -78,6 +78,12 @@ class Queue(Handler):
         self.on_parsed_msg(owner, name, cb, lambda contents: float(contents), recurrent)
 
     """
+    Adds a message handler with automatic conversion from bytes to string (utf-8)
+    """
+    def on_str(self, owner, name, cb, recurrent=False):
+        self.on_parsed_msg(owner, name, cb, lambda contents: contents.decode('utf-8'), recurrent)
+
+    """
     Removes all message handlers of a given owner.
     """
     def unobserve(self, owner):
