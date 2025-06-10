@@ -19,22 +19,20 @@ class StateMachine:
 
     def cancel_state_tasks(self):
         Timeout.cancel_and_inval_by_owner(self)
+        # cancel queue observers
+        for queue in self.observed_queues:
+            queue.unobserve(self)
+        # cancel SM observers
+        for sm in self.observed_sms:
+            sm.unobserve(self)
 
     # Add other state machine observed by this one
     def add_sm(self, sm):
         self.observed_sms.append(sm)
 
-    def cancel_sm_observers(self):
-        for sm in self.observed_sms:
-            sm.unobserve(self)
-
     # Add queue observed by this state machine
     def add_queue(self, queue):
         self.observed_queues.append(queue)
-
-    def cancel_queue_observers(self):
-        for queue in self.observed_queues:
-            queue.unobserve(self)
 
     def add_state(self, name, callback):
         self.states[name] = callback
@@ -107,8 +105,6 @@ class StateMachine:
             Log.warn("*** Invalid trans %s %s %s" % (self.name, self.state, to_state))
             return False
         self.cancel_state_tasks()
-        self.cancel_queue_observers()
-        self.cancel_sm_observers()
         Log.debug("%s: %s -> %s" % (self.name, self.state, to_state))
         self.state = to_state
         self.states[self.state]()
