@@ -1,1 +1,2 @@
 - Make Handler.items, Timeout.items belong to event loop (maybe)
+- Add "sent" event so the sender can throttle tx
